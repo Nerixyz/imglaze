@@ -1,0 +1,14 @@
+body {
+    margin: 0;
+}
+
+#image-host {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+#image-host img {
+    width: 100%;
+    height: auto;
+}

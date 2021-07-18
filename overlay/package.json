@@ -1,0 +1,27 @@
+{
+  "name": "overlay",
+  "version": "1.0.0",
+  "description": "",
+  "targets": {
+    "production": {
+      "publicUrl": "/overlay"
+    }
+  },
+  "scripts": {
+    "build": "rimraf dist && parcel build src/index.html",
+    "dev": "parcel src/index.html"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "parcel": "2.0.0-beta.3.1",
+    "typescript": "^4.3.5",
+    "eslint": "^7.31.0",
+    "prettier": "^2.3.2",
+    "rimraf": "^3.0.2",
+    "@typescript-eslint/eslint-plugin": "^4.28.3",
+    "@typescript-eslint/parser": "^4.28.3",
+    "eslint-plugin-prettier": "^3.4.0"
+  }
+}
