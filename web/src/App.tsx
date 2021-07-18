@@ -1,16 +1,22 @@
 import React, { useState } from 'react';
 import { ApiClient } from './api/ApiClient';
 import { ApiProvider } from './context/Api';
-import Login from './views/Login'
+import Login from './views/Login';
 import Dashboard from './views/Dashboard';
 
 export function App() {
   const [token, setToken] = useState(getToken());
-  return <div className="bg-gray-900 h-screen w-screen flex justify-center pt-20 overflow-y-auto">
-    {(token ? <ApiProvider value={ new ApiClient(token, () => setToken(undefined)) }>
-        <Dashboard/>
-      </ApiProvider> : <Login/>)}
-  </div>
+  return (
+    <div className="bg-gray-900 h-screen w-screen flex justify-center pt-20 overflow-y-auto">
+      {token ? (
+        <ApiProvider value={new ApiClient(token, () => setToken(undefined))}>
+          <Dashboard />
+        </ApiProvider>
+      ) : (
+        <Login />
+      )}
+    </div>
+  );
 }
 
 function getToken() {

@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import cntl from 'cntl';
 
 interface Props {
@@ -10,7 +10,7 @@ interface Props {
 const CButton = React.forwardRef<
   HTMLButtonElement & HTMLAnchorElement,
   Props & React.HTMLAttributes<HTMLButtonElement & HTMLAnchorElement>
->(({ href, disabled, children, secondColor, ...props }, ref) => {
+>(function CButton({ href, disabled, children, secondColor, ...props }, ref) {
   const preventClick = useCallback(
     (e: React.MouseEvent) => {
       if (disabled) {
@@ -67,7 +67,7 @@ const CButton = React.forwardRef<
 const MaybeButton = React.forwardRef<
   HTMLButtonElement & HTMLAnchorElement,
   { href?: string; disabled?: boolean } & React.HTMLAttributes<HTMLButtonElement & HTMLAnchorElement>
->((props, ref) => {
+>(function MaybeButton(props, ref) {
   return props.href ? <a {...props} ref={ref} /> : <button {...props} ref={ref} />;
 });
 

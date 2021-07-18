@@ -69,22 +69,24 @@ const Overlay: FunctionComponent<Props> = ({ deleteOverlay, rerollSecret, overla
               readOnly={true}
               type={secretShown ? 'text' : 'password'}
               value={overlayUrl}
-              onFocus={e =>
-                e.target.select()
-              }
+              onFocus={e => e.target.select()}
             />
             {secretShown ? (
-              <LazyImage children={<EyeOpenIcon className="cursor-pointer" onClick={toggleSecret} />}/>
+              <LazyImage children={<EyeOpenIcon className="cursor-pointer" onClick={toggleSecret} />} />
             ) : (
-              <LazyImage children={<EyeClosedIcon className="cursor-pointer" onClick={toggleSecret} />}/>
+              <LazyImage children={<EyeClosedIcon className="cursor-pointer" onClick={toggleSecret} />} />
             )}
           </div>
-          <LazyImage children={<CopyIcon className="cursor-pointer" onClick={copyUrl} />}/>
+          <LazyImage children={<CopyIcon className="cursor-pointer" onClick={copyUrl} />} />
         </div>
       </div>
       <div className="flex items-end justify-end mt-3">
-        <CButton onClick={rerollSecret}><LazyImage children={<ReloadIcon/>}/> Reset</CButton>
-        <CButton onClick={deleteOverlay}><LazyImage children={<DeleteIcon/>}/> Delete</CButton>
+        <CButton onClick={rerollSecret}>
+          <LazyImage children={<ReloadIcon />} /> Reset
+        </CButton>
+        <CButton onClick={deleteOverlay}>
+          <LazyImage children={<DeleteIcon />} /> Delete
+        </CButton>
       </div>
     </div>
   );

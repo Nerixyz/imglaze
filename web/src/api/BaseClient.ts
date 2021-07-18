@@ -2,8 +2,7 @@
 type AnyObject = Record<string, any>;
 
 export class BaseClient {
-  constructor(private authToken: string, private clearToken: () => void) {
-  }
+  constructor(private authToken: string, private clearToken: () => void) {}
 
   async logout(): Promise<void> {
     await this.delete('auth').catch(console.error);
