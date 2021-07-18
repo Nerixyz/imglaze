@@ -10,16 +10,12 @@ use crate::{
 };
 use actix::Addr;
 use actix_web::{cookie::CookieBuilder, delete, get, web, HttpResponse, Result};
-use itertools::Itertools;
 use serde::{Deserialize, Serialize};
 use sqlx::PgPool;
 use time::{Duration, OffsetDateTime};
-use twitch_api2::{
-    helix::Scope,
-    twitch_oauth2::{
-        client::reqwest_http_client, tokens::UserTokenBuilder, ClientId, ClientSecret, CsrfToken,
-        RedirectUrl, TwitchToken, UserToken,
-    },
+use twitch_api2::twitch_oauth2::{
+    client::reqwest_http_client, tokens::UserTokenBuilder, ClientId, ClientSecret, CsrfToken,
+    RedirectUrl, TwitchToken, UserToken,
 };
 
 #[derive(Deserialize)]
