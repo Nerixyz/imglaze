@@ -4,7 +4,10 @@
   "description": "",
   "targets": {
     "production": {
-      "publicUrl": "/overlay"
+      "publicUrl": "/overlay",
+      "engines": {
+        "browsers": "Chrome 74"
+      }
     }
   },
   "scripts": {
