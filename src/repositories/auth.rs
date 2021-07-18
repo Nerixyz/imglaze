@@ -118,10 +118,7 @@ fn redirect_to_twitch_auth() -> HttpResponse {
         client_id: TWITCH_CLIENT_ID.to_string(),
         redirect_uri: format!("{}/api/v1/auth/twitch-callback", SERVER_URL),
         response_type: "code".to_string(),
-        scope: vec![Scope::ModerationRead]
-            .iter()
-            .map(ToString::to_string)
-            .join(" "),
+        scope: "".to_string(),
     };
     let url = format!(
         "https://id.twitch.tv/oauth2/authorize?{}",
