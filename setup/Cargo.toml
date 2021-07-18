@@ -1,0 +1,21 @@
+[package]
+name = "setup"
+version = "0.1.0"
+edition = "2018"
+
+[[bin]]
+name = "setup"
+path = "src/main.rs"
+
+[dependencies]
+dialoguer = "0.8.0"
+dotenv = "0.15.0"
+regex = "1.5.4"
+chrono = "0.4.19"
+
+tokio = "1"
+tokio-postgres = { version = "0.7.2", features = ["with-serde_json-1"] }
+
+twitch_oauth2 = { version = "0.5.1", features = ["reqwest_client"] }
+reqwest = "0.11"
+serde = { version = "1.0", features = ["derive"] }
