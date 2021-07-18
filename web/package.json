@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "parcel src/index.html",
-    "build": "rimraf dist && parcel build src/index.html"
+    "build": "rimraf dist && parcel build src/index.html",
+    "format": "prettier -w src/**/*.{js,jsx,ts,tsx} --loglevel warn",
+    "lint": "eslint src/**/*.{js,jsx,ts,tsx} --fix"
   },
   "dependencies": {
     "@headlessui/react": "^1.3.0",

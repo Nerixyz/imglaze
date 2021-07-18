@@ -9,7 +9,9 @@
   },
   "scripts": {
     "build": "rimraf dist && parcel build src/index.html",
-    "dev": "parcel src/index.html"
+    "dev": "parcel src/index.html",
+    "format": "prettier -w src/**/*.{js,jsx,ts,tsx} --loglevel warn",
+    "lint": "eslint src/**/*.{js,jsx,ts,tsx} --fix"
   },
   "keywords": [],
   "author": "",
