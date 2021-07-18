@@ -2,8 +2,8 @@
   "name": "web",
   "version": "0.0.0",
   "workspaces": [
-    "packages\\dashboard",
-    "packages\\overlay"
+    "packages/dashboard",
+    "packages/overlay"
   ],
   "scripts": {
     "build": "npm run build --workspaces",
