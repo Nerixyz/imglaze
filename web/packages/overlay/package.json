@@ -1,0 +1,22 @@
+{
+  "name": "overlay",
+  "version": "1.0.0",
+  "description": "",
+  "targets": {
+    "production": {
+      "publicUrl": "/overlay",
+      "engines": {
+        "browsers": "Chrome 74"
+      }
+    }
+  },
+  "scripts": {
+    "dev": "parcel src/index.html",
+    "build": "rimraf dist && parcel build src/index.html"
+  },
+  "devDependencies": {
+    "parcel": "2.0.0-beta.3.1",
+    "rimraf": "^3.0.2"
+  },
+  "license": "ISC"
+}

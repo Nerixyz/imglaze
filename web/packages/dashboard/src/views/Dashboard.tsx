@@ -20,7 +20,7 @@ const Dashboard: FunctionComponent = () => {
         },
         { rethrow: true },
       ),
-    [setOverlays, api, dialog],
+    [setOverlays, api, dialog.async],
   );
 
   const removeOverlay = useCallback(
@@ -29,7 +29,7 @@ const Dashboard: FunctionComponent = () => {
         await api.deleteOverlay(id);
         setOverlays(overlays => overlays.filter(o => o.id !== id));
       }),
-    [setOverlays, api, dialog],
+    [setOverlays, api, dialog.async],
   );
 
   const rerollSecret = useCallback(
@@ -39,7 +39,7 @@ const Dashboard: FunctionComponent = () => {
         setOverlays(overlays => overlays.map(o => (o.id === updated.id ? updated : o)));
       });
     },
-    [setOverlays, api, dialog],
+    [setOverlays, api, dialog.async],
   );
 
   useEffect(() => {
@@ -47,7 +47,7 @@ const Dashboard: FunctionComponent = () => {
       api.getOverlays().then(overlays => setOverlays(overlays)),
       { openWhileLoading: false },
     );
-  }, [setOverlays, api, dialog]);
+  }, [setOverlays, api, dialog.promise]);
 
   return (
     <div className="flex items-center flex-col md:max-w-2xl w-full mx-10">

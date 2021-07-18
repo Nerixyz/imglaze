@@ -85,8 +85,8 @@ async fn main() -> std::io::Result<()> {
                     .configure(init_repositories)
                     .default_service(web::route().to(HttpResponse::NotFound)),
             )
-            .service(actix_files::Files::new("/overlay", "overlay/dist").index_file("index.html"))
-            .service(actix_files::Files::new("/", "web/dist").index_file("index.html"))
+            .service(actix_files::Files::new("/overlay", "web/packages/overlay/dist").index_file("index.html"))
+            .service(actix_files::Files::new("/", "web/packages/dashboard/dist").index_file("index.html"))
     })
     .bind("127.0.0.1:8083")?
     .run()
