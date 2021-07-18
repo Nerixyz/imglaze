@@ -31,18 +31,19 @@ async fn create(
     pool: web::Data<PgPool>,
 ) -> Result<HttpResponse> {
     let user: UserToken = claims.get_user(&pool).await?.into();
-    if user.login != body.for_user && !check_mod(&body.for_user, &user.login).await {
+    let for_user = body.into_inner().for_user.to_lowercase();
+    if user.login != for_user && !check_mod(&for_user, &user.login).await {
         return Err(errors::ErrorForbidden("You aren't a moderator."));
     }
 
     let secret = generate_secret();
-    let overlay = match overlay::create(&user.user_id, &body.for_user, &secret, &pool).await {
+    let overlay = match overlay::create(&user.user_id, &for_user, &secret, &pool).await {
         Ok(overlay) => overlay,
         Err(JsonError {
             error: SqlReason::Duplicate(ref constraint),
             ..
         }) if constraint == "overlays_created_by_for_user_uindex" => {
-            return Err(match overlay::creator_for(&body.for_user, &pool).await {
+            return Err(match overlay::creator_for(&for_user, &pool).await {
                 Ok(creator) => errors::ErrorConflict(format!(
                     "This channel already exists. It's managed by {}",
                     creator

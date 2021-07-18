@@ -15,7 +15,7 @@ const Dashboard: FunctionComponent = () => {
     (forUser: string) =>
       dialog.async(
         async () => {
-          const newOverlay = await api.createOverlay(forUser);
+          const newOverlay = await api.createOverlay(forUser.trim().toLowerCase());
           setOverlays(overlays => [...overlays, newOverlay]);
         },
         { rethrow: true },
