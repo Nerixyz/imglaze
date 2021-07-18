@@ -1,0 +1,7 @@
+/target
+.env
+.idea
+node_modules
+dist
+.vscode
+.parcel-cache

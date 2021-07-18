@@ -1,0 +1,1 @@
+drop index overlays_created_by_for_user_uindex;
