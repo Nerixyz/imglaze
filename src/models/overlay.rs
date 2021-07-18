@@ -8,6 +8,8 @@ pub struct Overlay {
     pub created_by: String,
     pub for_user: String,
     pub secret: String,
+    #[serde(skip)]
+    pub last_image: Option<String>,
 }
 
 impl Overlay {
@@ -17,6 +19,18 @@ impl Overlay {
             "UPDATE overlays SET secret = $2 WHERE id = $1",
             self.id,
             self.secret
+        )
+        .execute(pool)
+        .await?;
+        Ok(())
+    }
+
+    pub async fn patch_image(&self, pool: &PgPool) -> SqlResult<()> {
+        // language=PostgreSQL
+        sqlx::query!(
+            "UPDATE overlays SET last_image = $2 WHERE id = $1",
+            self.id,
+            self.last_image
         )
         .execute(pool)
         .await?;
@@ -77,7 +91,7 @@ pub async fn create(
     pool: &PgPool,
 ) -> SqlResult<Overlay> {
     // language=PostgreSQL
-    let overlay = sqlx::query_as!(Overlay, "INSERT INTO overlays (created_by, for_user, secret) VALUES ($1, $2, $3) RETURNING id, created_by, for_user, secret", user_id, for_user, secret).fetch_one(pool).await?;
+    let overlay = sqlx::query_as!(Overlay, "INSERT INTO overlays (created_by, for_user, secret) VALUES ($1, $2, $3) RETURNING id, created_by, for_user, secret, last_image", user_id, for_user, secret).fetch_one(pool).await?;
     Ok(overlay)
 }
 

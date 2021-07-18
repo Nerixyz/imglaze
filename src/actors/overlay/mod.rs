@@ -2,7 +2,10 @@ pub mod messages;
 
 use super::ws::WsSessionActor;
 use crate::{
-    actors::overlay::messages::{CloseSock, DeleteOverlay, Disconnect, Outgoing, OverlayCommand},
+    actors::overlay::messages::{
+        CloseSock, DeleteOverlay, Disconnect, Outgoing, OverlayCommand, OverlayCommandData,
+    },
+    log_err,
     models::overlay,
 };
 use actix::{Actor, ActorFutureExt, Addr, Context, ContextFutureSpawner, Handler, WrapFuture};
@@ -41,7 +44,7 @@ impl Actor for OverlayActor {
 impl Handler<Connect> for OverlayActor {
     type Result = usize;
 
-    fn handle(&mut self, msg: Connect, _ctx: &mut Self::Context) -> Self::Result {
+    fn handle(&mut self, msg: Connect, ctx: &mut Self::Context) -> Self::Result {
         let session_id = self.next_session_id;
         self.next_session_id += 1;
 
@@ -49,7 +52,26 @@ impl Handler<Connect> for OverlayActor {
             .entry(msg.overlay_id)
             .or_insert_with(HashSet::new)
             .insert(session_id);
-        self.sessions.insert(session_id, msg.addr);
+        self.sessions.insert(session_id, msg.addr.clone());
+
+        // restore image
+        let pool = self.pool.clone();
+        async move {
+            if let Ok(overlay::Overlay {
+                last_image: Some(src),
+                ..
+            }) = overlay::by_id(msg.overlay_id, &pool).await
+            {
+                log_err!(
+                    msg.addr
+                        .send(Outgoing(OverlayCommandData::Image(src)))
+                        .await,
+                    "Could not send initial image"
+                );
+            }
+        }
+        .into_actor(self)
+        .spawn(ctx);
 
         session_id
     }
@@ -89,7 +111,7 @@ impl Handler<OverlayCommand> for OverlayActor {
         async move { overlay::by_login(&channel_login, &pool).await }
             .into_actor(self)
             .then(move |res, this, ctx| {
-                if let Ok(overlay) = res {
+                if let Ok(mut overlay) = res {
                     if let Some(overlay) = this.overlays.get(&overlay.id) {
                         for session in overlay {
                             if let Some(session) = this.sessions.get(session) {
@@ -99,6 +121,18 @@ impl Handler<OverlayCommand> for OverlayActor {
                                     .then(|_, _, _| actix::fut::ready(()))
                                     .spawn(ctx);
                             }
+                        }
+                    }
+
+                    match data {
+                        OverlayCommandData::Image(src) => {
+                            overlay.last_image = Some(src);
+                            let pool = this.pool.clone();
+                            async move {
+                                log_err!(overlay.patch_image(&pool).await, "Could not patch image");
+                            }
+                            .into_actor(this)
+                            .spawn(ctx);
                         }
                     }
                 }
