@@ -1,4 +1,5 @@
-use std::{ffi::OsStr, path::Path};
+use crate::constants::IMAGE_PROXY;
+use std::path::Path;
 use url::Url;
 
 pub fn check_image_url(url: &str) -> anyhow::Result<()> {
@@ -9,4 +10,8 @@ pub fn check_image_url(url: &str) -> anyhow::Result<()> {
         | Some("bmp") | Some("svg") => Ok(()),
         _ => Err(anyhow::Error::msg("Extension not found or whitelisted")),
     }
+}
+
+pub fn wrap_proxy(url: &str) -> String {
+    format!("{}/?url={}", IMAGE_PROXY, urlencoding::encode(url))
 }

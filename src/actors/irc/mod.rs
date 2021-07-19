@@ -7,7 +7,10 @@ use crate::{
     },
     constants::{TWITCH_CLIENT_ID, TWITCH_CLIENT_SECRET, TWITCH_CLIENT_USER_LOGIN},
     log_err,
-    services::{chat::opt_next_space, images::check_image_url},
+    services::{
+        chat::opt_next_space,
+        images::{check_image_url, wrap_proxy},
+    },
 };
 use actix::{
     Actor, Addr, AsyncContext, Context, ContextFutureSpawner, Handler, Recipient, StreamHandler,
@@ -121,6 +124,7 @@ impl StreamHandler<PrivmsgMessage> for IrcActor {
                         return;
                     }
 
+                    let image = wrap_proxy(&image);
                     if image.len() >= 255 {
                         log_err!(
                             client
