@@ -24,7 +24,4 @@ This will change the image on screen.
 Images will fit to the _width_ of the browser and adjust their height while preserving the aspect ratio (`width: 100%; height: auto;`).
 Images are saved per overlay and will be restored on reload.
 
-The current whitelisted domains are:
-
-* `i.imgur.com`
-* `i.nuuls.com`
+These are the currently supported image formats: `png`, `jpg`, `jpeg`, `webp`, `avif`, `jxl`, `bmp` and `svg`.
