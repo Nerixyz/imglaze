@@ -8,7 +8,7 @@ use crate::{
     log_err,
     models::overlay,
 };
-use actix::{Actor, ActorFutureExt, Addr, Context, ContextFutureSpawner, Handler, WrapFuture};
+use actix::{Actor, ActorFutureExt, Addr, Context, ContextFutureSpawner, Handler, WrapFuture, Running};
 use messages::Connect;
 use sqlx::PgPool;
 use std::collections::{HashMap, HashSet};
@@ -39,6 +39,11 @@ impl OverlayActor {
 
 impl Actor for OverlayActor {
     type Context = Context<Self>;
+
+    fn stopping(&mut self, _ctx: &mut Self::Context) -> Running {
+        log::info!("OverlayActor stopping");
+        Running::Stop
+    }
 }
 
 impl Handler<Connect> for OverlayActor {

@@ -12,10 +12,7 @@ use crate::{
         images::{check_image_url, wrap_proxy},
     },
 };
-use actix::{
-    Actor, Addr, AsyncContext, Context, ContextFutureSpawner, Handler, Recipient, StreamHandler,
-    WrapFuture,
-};
+use actix::{Actor, Addr, AsyncContext, Context, ContextFutureSpawner, Handler, Recipient, StreamHandler, WrapFuture, Running};
 use futures::StreamExt;
 use std::{
     collections::HashMap,
@@ -91,6 +88,11 @@ impl IrcActor {
 
 impl Actor for IrcActor {
     type Context = Context<Self>;
+
+    fn stopping(&mut self, _ctx: &mut Self::Context) -> Running {
+        log::info!("IrcActor stopping");
+        Running::Stop
+    }
 }
 
 impl StreamHandler<PrivmsgMessage> for IrcActor {

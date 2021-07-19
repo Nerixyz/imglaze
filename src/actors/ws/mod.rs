@@ -88,6 +88,7 @@ impl Actor for WsSessionActor {
     fn stopping(&mut self, _ctx: &mut Self::Context) -> Running {
         metrics::decrement_gauge!("imglaze_active_sockets", 1.0);
         self.overlay.do_send(Disconnect(self.client_id));
+        log::info!("Stopping ws session for id {}", self.overlay_id);
         Running::Stop
     }
 }
