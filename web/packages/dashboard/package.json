@@ -2,6 +2,11 @@
   "name": "dashboard",
   "version": "1.0.0",
   "description": "",
+  "targets": {
+    "production": {
+      "sourceMap": false
+    }
+  },
   "scripts": {
     "dev": "parcel src/index.html",
     "build": "rimraf dist && parcel build src/index.html"
