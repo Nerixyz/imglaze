@@ -118,6 +118,14 @@ impl StreamHandler<PrivmsgMessage> for IrcActor {
                         return;
                     }
 
+                    if image.len() >= 255 {
+                        log_err!(
+                            client.say(msg.channel_login, "Link is too long").await,
+                            "Failed to say"
+                        );
+                        return;
+                    }
+
                     let message = match overlay
                         .send(OverlayCommand {
                             channel_login: msg.channel_login.clone(),
