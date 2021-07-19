@@ -11,6 +11,8 @@ use rand::{distributions::Alphanumeric, Rng};
 use serde::Deserialize;
 use sqlx::PgPool;
 use twitch_api2::twitch_oauth2::UserToken;
+use crate::actors::irc::IrcActor;
+use crate::actors::irc::messages::JoinMessage;
 
 #[get("")]
 async fn get_all(claims: JwtClaims, pool: web::Data<PgPool>) -> Result<HttpResponse> {
@@ -29,6 +31,7 @@ async fn create(
     claims: JwtClaims,
     body: web::Json<OverlayCreateBody>,
     pool: web::Data<PgPool>,
+    irc: web::Data<Addr<IrcActor>>,
 ) -> Result<HttpResponse> {
     let user: UserToken = claims.get_user(&pool).await?.into();
     let for_user = body.into_inner().for_user.to_lowercase();
@@ -55,6 +58,8 @@ async fn create(
         }
         _ => return Err(errors::ErrorBadRequest("This channel already exists")),
     };
+
+    irc.do_send(JoinMessage(for_user));
 
     Ok(HttpResponse::Ok().json(overlay))
 }
