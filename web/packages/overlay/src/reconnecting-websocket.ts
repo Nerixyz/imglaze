@@ -9,6 +9,7 @@ export class WsMessageEvent<K extends keyof EventMap> extends Event {
 export class ReconnectingWebsocket extends EventTarget {
   private ws?: WebSocket;
   private shouldReconnect = false;
+  private nextDelay = 0;
 
   public listen<K extends keyof EventMap>(key: K, fn: (e: WsMessageEvent<K>) => void): this {
     this.addEventListener(`ws:${key}`, fn as EventListener);
@@ -43,10 +44,7 @@ export class ReconnectingWebsocket extends EventTarget {
 
       const closeListener = () => {
         ws.removeEventListener('message', messageListener);
-        if (this.shouldReconnect) {
-          // don't reconnect if an error occurred
-          this.connect().catch(console.error);
-        }
+        this.reconnectLater();
       };
       const messageListener = (e: MessageEvent) => {
         if (typeof e.data === 'string') {
@@ -65,6 +63,13 @@ export class ReconnectingWebsocket extends EventTarget {
       ws.addEventListener('close', closeListener, { once: true });
       ws.addEventListener('message', messageListener);
     });
+  }
+
+  private reconnectLater() {
+    setTimeout(() => {
+      this.nextDelay = Math.min(this.nextDelay * 2 + 5, 120);
+      this.connect().then(() => (this.nextDelay = 0));
+    }, this.nextDelay * 1000);
   }
 
   private handleMessage<K extends keyof EventMap>(type: K, content: EventMap[K]) {
