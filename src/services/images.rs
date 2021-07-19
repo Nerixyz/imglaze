@@ -1,9 +1,9 @@
 use url::Url;
 
-pub fn check_image_url(url: &str) -> anyhow::Result<bool> {
+pub fn check_image_url(url: &str) -> anyhow::Result<()> {
     let url = Url::parse(url)?;
-    Ok(match url.domain() {
-        Some("i.imgur.com") | Some("i.nuuls.com") => true,
-        _ => false,
-    })
+    match url.domain() {
+        Some("i.imgur.com") | Some("i.nuuls.com") => Ok(()),
+        _ => Err(anyhow::Error::msg("Domain not whitelisted")),
+    }
 }

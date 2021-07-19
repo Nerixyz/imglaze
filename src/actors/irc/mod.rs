@@ -13,7 +13,6 @@ use actix::{
     Actor, Addr, AsyncContext, Context, ContextFutureSpawner, Handler, Recipient, StreamHandler,
     WrapFuture,
 };
-use anyhow::Error as AnyError;
 use futures::StreamExt;
 use std::{
     collections::HashMap,
@@ -105,35 +104,20 @@ impl StreamHandler<PrivmsgMessage> for IrcActor {
         match (command, args) {
             ("img", Some(args)) => {
                 let (image, _) = opt_next_space(args);
-                if let Some(err) = check_image_url(image)
-                    .and_then(|res| {
-                        if !res {
-                            Err(AnyError::msg("Domain not whitelisted"))
-                        } else {
-                            Ok(())
-                        }
-                    })
-                    .err()
-                {
-                    let client = self.client.clone();
-                    async move {
+                let client = self.client.clone();
+                let overlay = self.overlay.clone();
+                let image = image.to_string();
+                async move {
+                    if let Err(err) = check_image_url(&image) {
                         log_err!(
                             client
                                 .say(msg.channel_login, format!("Bad image: {}", err))
                                 .await,
                             "Failed to say"
                         );
+                        return;
                     }
-                    .into_actor(self)
-                    .spawn(ctx);
 
-                    return;
-                }
-
-                let client = self.client.clone();
-                let overlay = self.overlay.clone();
-                let image = image.to_string();
-                async move {
                     let message = match overlay
                         .send(OverlayCommand {
                             channel_login: msg.channel_login.clone(),
@@ -151,7 +135,7 @@ impl StreamHandler<PrivmsgMessage> for IrcActor {
                     );
                 }
                 .into_actor(self)
-                .spawn(ctx);
+                .spawn(ctx)
             }
             _ => (),
         };
