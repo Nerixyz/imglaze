@@ -143,7 +143,7 @@ impl StreamHandler<PrivmsgMessage> for IrcActor {
                         })
                         .await
                     {
-                        Ok(_) => "Ok",
+                        Ok(_) => "Updated Image",
                         Err(_) => "Too much traffic",
                     }
                     .to_string();
