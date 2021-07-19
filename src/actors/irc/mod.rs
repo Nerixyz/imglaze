@@ -120,7 +120,7 @@ impl StreamHandler<PrivmsgMessage> for IrcActor {
 
                     if image.len() >= 255 {
                         log_err!(
-                            client.say(msg.channel_login, "Link is too long").await,
+                            client.say(msg.channel_login, "Link is too long".to_string()).await,
                             "Failed to say"
                         );
                         return;
