@@ -1,5 +1,8 @@
 use crate::{
-    actors::overlay::{messages::DeleteOverlay, OverlayActor},
+    actors::{
+        irc::{messages::JoinMessage, IrcActor},
+        overlay::{messages::DeleteOverlay, OverlayActor},
+    },
     errors,
     errors::{json_error::JsonError, sql::SqlReason},
     models::overlay,
@@ -11,8 +14,6 @@ use rand::{distributions::Alphanumeric, Rng};
 use serde::Deserialize;
 use sqlx::PgPool;
 use twitch_api2::twitch_oauth2::UserToken;
-use crate::actors::irc::IrcActor;
-use crate::actors::irc::messages::JoinMessage;
 
 #[get("")]
 async fn get_all(claims: JwtClaims, pool: web::Data<PgPool>) -> Result<HttpResponse> {
