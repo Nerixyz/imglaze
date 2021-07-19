@@ -16,9 +16,11 @@ use crate::{
     constants::{DATABASE_URL, SERVER_URL, TWITCH_CLIENT_ID, TWITCH_CLIENT_SECRET},
     models::overlay,
     repositories::init_repositories,
+    services::metrics::register_metrics,
 };
 use actix::Actor;
 use actix_cors::Cors;
+use actix_metrics::Metrics;
 use actix_web::{
     http::header::{AUTHORIZATION, CONTENT_TYPE},
     middleware::Logger,
@@ -26,6 +28,7 @@ use actix_web::{
 };
 use anyhow::Error as AnyError;
 use log::LevelFilter;
+use metrics_exporter_prometheus::PrometheusBuilder;
 use sqlx::{postgres::PgConnectOptions, ConnectOptions, PgPool};
 use std::str::FromStr;
 use tokio::sync::RwLock;
@@ -38,6 +41,12 @@ use twitch_api2::{
 async fn main() -> std::io::Result<()> {
     dotenv::dotenv().ok();
     env_logger::builder().format_timestamp(None).init();
+
+    let prom_recorder = Box::leak(Box::new(PrometheusBuilder::new().build()));
+    let prom_handle = prom_recorder.handle();
+    metrics::set_recorder(prom_recorder).expect("Couldn't set recorder");
+    Metrics::register_metrics();
+    register_metrics();
 
     log::info!("Connecting to database");
 
@@ -77,6 +86,7 @@ async fn main() -> std::io::Result<()> {
             .app_data(web::Data::new(pool.clone()))
             .app_data(web::Data::new(irc_actor.clone()))
             .app_data(web::Data::new(overlay_actor.clone()))
+            .app_data(web::Data::new(prom_handle.clone()))
             .app_data(app_access_token.clone())
             .wrap(create_cors())
             .wrap(Logger::default())

@@ -65,6 +65,7 @@ impl Actor for WsSessionActor {
     type Context = ws::WebsocketContext<Self>;
 
     fn started(&mut self, ctx: &mut Self::Context) {
+        metrics::increment_gauge!("imglaze_active_sockets", 1.0);
         self.hb(ctx);
 
         let this_addr = ctx.address();
@@ -85,6 +86,7 @@ impl Actor for WsSessionActor {
     }
 
     fn stopping(&mut self, _ctx: &mut Self::Context) -> Running {
+        metrics::decrement_gauge!("imglaze_active_sockets", 1.0);
         self.overlay.do_send(Disconnect(self.client_id));
         Running::Stop
     }

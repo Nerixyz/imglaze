@@ -41,12 +41,15 @@ pub struct IrcActor {
 
 impl IrcActor {
     pub fn run(overlay: Recipient<OverlayCommand>, db: Addr<DbActor>) -> Addr<Self> {
-        let config = ClientConfig::new_simple(IrcCredentials::new(
-            TWITCH_CLIENT_USER_LOGIN.to_string(),
-            TWITCH_CLIENT_ID.to_string(),
-            TWITCH_CLIENT_SECRET.to_string(),
-            token_storage::PgTokenStorage(db),
-        ));
+        let config = ClientConfig {
+            metrics_identifier: Some("imglaze".into()),
+            ..ClientConfig::new_simple(IrcCredentials::new(
+                TWITCH_CLIENT_USER_LOGIN.to_string(),
+                TWITCH_CLIENT_ID.to_string(),
+                TWITCH_CLIENT_SECRET.to_string(),
+                token_storage::PgTokenStorage(db),
+            ))
+        };
         let (incoming, client) = IrcClient::new(config);
 
         Self::create(|ctx| {
@@ -120,12 +123,15 @@ impl StreamHandler<PrivmsgMessage> for IrcActor {
 
                     if image.len() >= 255 {
                         log_err!(
-                            client.say(msg.channel_login, "Link is too long".to_string()).await,
+                            client
+                                .say(msg.channel_login, "Link is too long".to_string())
+                                .await,
                             "Failed to say"
                         );
                         return;
                     }
 
+                    metrics::increment_counter!("imglaze_images_changed");
                     let message = match overlay
                         .send(OverlayCommand {
                             channel_login: msg.channel_login.clone(),
