@@ -125,7 +125,7 @@ impl StreamHandler<PrivmsgMessage> for IrcActor {
                     }
 
                     let image = wrap_proxy(&image);
-                    if image.len() >= 255 {
+                    if image.len() >= 350 {
                         log_err!(
                             client
                                 .say(msg.channel_login, "Link is too long".to_string())
