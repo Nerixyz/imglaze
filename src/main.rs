@@ -89,7 +89,7 @@ async fn main() -> std::io::Result<()> {
             .app_data(web::Data::new(prom_handle.clone()))
             .app_data(app_access_token.clone())
             .wrap(create_cors())
-            .wrap(Logger::default())
+            .wrap(Logger::default().exclude("/api/v1/metrics"))
             .service(
                 web::scope("/api/v1")
                     .configure(init_repositories)
