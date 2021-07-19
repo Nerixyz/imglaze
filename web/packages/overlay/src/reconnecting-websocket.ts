@@ -27,6 +27,7 @@ export class ReconnectingWebsocket extends EventTarget {
       const clearListeners = () => {
         ws.removeEventListener('open', openListener);
         ws.removeEventListener('error', errorListener);
+        clearTimeout(timeoutId);
       };
       const openListener = () => {
         resolve();
@@ -62,6 +63,11 @@ export class ReconnectingWebsocket extends EventTarget {
       };
       ws.addEventListener('close', closeListener, { once: true });
       ws.addEventListener('message', messageListener);
+
+      const timeoutId = setTimeout(() => {
+        ws.close();
+        reject('?????');
+      }, 2000);
     });
   }
 
