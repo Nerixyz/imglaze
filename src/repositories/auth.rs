@@ -4,12 +4,12 @@ use crate::{
         IrcActor,
     },
     constants::{SERVER_URL, TWITCH_CLIENT_ID, TWITCH_CLIENT_SECRET},
-    errors::redirect_error::RedirectError,
     models::{users, users::User},
     services::jwt::{encode_jwt, JwtClaims},
 };
 use actix::Addr;
 use actix_web::{cookie::CookieBuilder, delete, get, web, HttpResponse, Result};
+use errors::redirect_error::RedirectError;
 use serde::{Deserialize, Serialize};
 use sqlx::PgPool;
 use time::{Duration, OffsetDateTime};

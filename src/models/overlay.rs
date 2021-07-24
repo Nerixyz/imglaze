@@ -1,4 +1,4 @@
-use crate::errors::sql::SqlResult;
+use errors::sql::SqlResult;
 use serde::Serialize;
 use sqlx::{FromRow, PgPool};
 

@@ -1,5 +1,5 @@
-use crate::errors::sql::SqlResult;
 use actix::Message;
+use errors::sql::SqlResult;
 use twitch_irc::login::UserAccessToken;
 
 pub struct SaveToken(pub UserAccessToken);

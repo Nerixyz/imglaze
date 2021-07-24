@@ -12,7 +12,10 @@ use crate::{
         images::{check_image_url, wrap_proxy},
     },
 };
-use actix::{Actor, Addr, AsyncContext, Context, ContextFutureSpawner, Handler, Recipient, StreamHandler, WrapFuture, Running};
+use actix::{
+    Actor, Addr, AsyncContext, Context, ContextFutureSpawner, Handler, Recipient, Running,
+    StreamHandler, WrapFuture,
+};
 use futures::StreamExt;
 use std::{
     collections::HashMap,

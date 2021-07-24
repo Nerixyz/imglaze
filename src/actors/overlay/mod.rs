@@ -8,7 +8,9 @@ use crate::{
     log_err,
     models::overlay,
 };
-use actix::{Actor, ActorFutureExt, Addr, Context, ContextFutureSpawner, Handler, WrapFuture, Running};
+use actix::{
+    Actor, ActorFutureExt, Addr, Context, ContextFutureSpawner, Handler, Running, WrapFuture,
+};
 use messages::Connect;
 use sqlx::PgPool;
 use std::collections::{HashMap, HashSet};

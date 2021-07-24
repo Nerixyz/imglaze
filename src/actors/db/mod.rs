@@ -1,9 +1,9 @@
 use crate::{
     actors::db::messages::{GetToken, SaveToken},
-    errors::sql::SqlResult,
     models::config::ConfigEntry,
 };
 use actix::{Actor, Context, Handler, ResponseFuture};
+use errors::sql::SqlResult;
 use sqlx::PgPool;
 use twitch_irc::login::UserAccessToken;
 

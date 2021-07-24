@@ -3,13 +3,12 @@ use crate::{
         irc::{messages::JoinMessage, IrcActor},
         overlay::{messages::DeleteOverlay, OverlayActor},
     },
-    errors,
-    errors::{json_error::JsonError, sql::SqlReason},
     models::overlay,
     services::{ivr::check_mod, jwt::JwtClaims},
 };
 use actix::Addr;
 use actix_web::{delete, get, patch, put, web, HttpResponse, Result};
+use errors::{json_error::JsonError, sql::SqlReason};
 use rand::{distributions::Alphanumeric, Rng};
 use serde::Deserialize;
 use sqlx::PgPool;
@@ -44,7 +43,7 @@ async fn create(
     let overlay = match overlay::create(&user.user_id, &for_user, &secret, &pool).await {
         Ok(overlay) => overlay,
         Err(JsonError {
-            error: SqlReason::Duplicate(ref constraint),
+            error: SqlReason::Conflict(ref constraint),
             ..
         }) if constraint == "overlays_created_by_for_user_uindex" => {
             return Err(match overlay::creator_for(&for_user, &pool).await {

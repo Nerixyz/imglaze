@@ -49,7 +49,8 @@ url = "2.2.2"
 
 metrics = "0.16.0"
 metrics-exporter-prometheus = "0.5.0"
-actix-metrics = { git = "https://github.com/nerixyz/actix-metrics", tag = "v0.2.1" }
+actix-metrics = { git = "https://github.com/Nerixyz/nerix-utils-rs", tag = "actix-metrics-v0.1.0" }
+errors = { git = "https://github.com/Nerixyz/nerix-utils-rs", tag = "errors-v0.1.1", features = ["sql-log", "sql-result"] }
 
 # see https://github.com/tkaitchuck/aHash/issues/95#issuecomment-874150078
 indexmap = "=1.6.2"

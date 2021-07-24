@@ -1,6 +1,5 @@
 use crate::{
     actors::{overlay::OverlayActor, ws::WsSessionActor},
-    errors,
     models::overlay,
 };
 use actix::Addr;

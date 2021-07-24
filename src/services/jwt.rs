@@ -1,4 +1,4 @@
-use crate::{constants::JWT_BASE64_SECRET, errors, models::users::User};
+use crate::{constants::JWT_BASE64_SECRET, models::users::User};
 use actix_web::Result;
 use jsonwebtoken::{
     decode, encode, Algorithm, DecodingKey, EncodingKey, Header, TokenData, Validation,
